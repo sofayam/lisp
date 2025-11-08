@@ -1,0 +1,10 @@
+(progn
+  (format t "--- DEBUGGING START ---~%")
+  (format t "ASDF version: ~a~%" (asdf:asdf-version))
+  (asdf:clear-configuration)
+  (format t "ASDF config cleared.~%")
+  (pushnew #p"/Users/mark/repos/lisp/" asdf:*central-registry* :test #'equal)
+  (format t "Central registry value:~%~s~%" asdf:*central-registry*)
+  (format t "Probing for .asd file: ~s~%" (probe-file #p"/Users/mark/repos/lisp/fun-server.asd"))
+  (format t "Result of asdf:find-system: ~s~%" (asdf:find-system "fun-server" nil))
+  (format t "--- DEBUGGING END ---~%"))
