@@ -4,7 +4,7 @@
   :license "MIT"
   :version "0.1.0"
   :depends-on (#:hunchentoot
-               #:cl-sqlite
+               #:sqlite
                #:cl-who)
   :components ((:file "package")
                (:file "main" :depends-on ("package")))
