@@ -21,9 +21,11 @@ In the SBCL REPL:
 
 ```lisp
 (quicklisp-quickstart:install)
-(ql:add-to-init-file)
+(ql:add-to-init-file)  ; This adds Quicklisp to ~/.sbclrc so it loads automatically
 (quit)
 ```
+
+This automatically configures SBCL to load Quicklisp on startup by adding it to `~/.sbclrc`.
 
 ## Project Structure
 
@@ -104,8 +106,20 @@ Create `build.lisp`:
 (push #P"./" asdf:*central-registry*)
 (ql:quickload :claudex)
 
+(defun main ()
+  "Entry point for the standalone binary"
+  (claudex:start-server)
+  ;; Keep the server running - wait forever
+  (handler-case 
+      (loop (sleep 1))
+    ;; Exit gracefully on Ctrl-C
+    (sb-sys:interactive-interrupt ()
+      (format t "~%Shutting down...~%")
+      (claudex:stop-server)
+      (sb-ext:exit :code 0))))
+
 (sb-ext:save-lisp-and-die "claudex"
-  :toplevel #'claudex:start-server
+  :toplevel #'main
   :executable t
   :compression t)
 ```
@@ -120,7 +134,10 @@ Run:
 
 ```bash
 ./claudex
+# Press Ctrl-C to stop
 ```
+
+**Important**: The `main` function includes a loop to keep the server running. Without it, the binary would start the server and immediately exit.
 
 ## Key Learnings
 
